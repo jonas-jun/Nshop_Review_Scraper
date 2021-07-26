@@ -40,51 +40,31 @@ def scraping_product(stop, sleep, driver):
 
 def scraping_catalog(stop, sleep, driver):
     count = 0
-    next_btn = ['a:nth-child(1)', 'a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)', 'a:nth-child(9)',
+    next_btn = ['a.pagination_now__gZWGP', 'a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)', 'a:nth-child(9)',
     'a:nth-child(10)', 'a.pagination_next__3ycRH']
     review_list = list()
     star_ratings = list()
 
     while count < stop:
-        if count == 0:
-            for pagenum in next_btn:
-                #print(pagenum)
-                driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
-                time.sleep(sleep)
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
-                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
-                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
-                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
+        for pagenum in next_btn:
+            driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
+            time.sleep(sleep)
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
+            page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
+            page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
 
-                for i in range(len(page_review)):
-                    
-                    review = page_review[i].text
-                    rate = page_rating[i].text[-1]
-                    review = re.sub('\n|\t', ' ', review)
-                    review = re.sub(' +', ' ', review)
-                    review_list.append(review)
-                    star_ratings.append(rate)
-            count += 1
-        else:
-            for pagenum in next_btn[1:]:
-                driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
-                time.sleep(sleep)
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
-                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
-                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
-                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
-
-                for i in range(len(page_review)):
-                    
-                    review = page_review[i].text
-                    rate = page_rating[i].text[-1]
-                    review = re.sub('\n|\t', ' ', review)
-                    review = re.sub(' +', ' ', review)
-                    review_list.append(review)
-                    star_ratings.append(rate)
-            count += 1
+            for i in range(len(page_review)):
+                
+                review = page_review[i].text
+                rate = page_rating[i].text[-1]
+                review = re.sub('\n|\t', ' ', review)
+                review = re.sub(' +', ' ', review)
+                review_list.append(review)
+                star_ratings.append(rate)
+        count += 1
+        
     return review_list, star_ratings
 
 def export(reviews, ratings, product):
@@ -104,6 +84,9 @@ if __name__ == '__main__':
     parser.add_argument('--style', type=str) # 'product', 'catalog'
     args = parser.parse_args()
     
+    if args.style == 'catalog' or args.style == 'c':
+        assert args.max_count < 20, 'when catalog style, maximum 2,000 reviews can be showed'
+
     keys = Keys()
     driver = webdriver.Chrome(args.path_chrome)
     driver.get(args.url)
@@ -121,5 +104,6 @@ if __name__ == '__main__':
 python review_scraper.py --style c --product 갤워치액티브2_알루미늄_40mm --max_count 30 --url https://search.shopping.naver.com/catalog/20551835243
 python review_scraper.py --style c --product 갤워치액티브2_알루미늄_44mm --max_count 15 --url https://search.shopping.naver.com/catalog/20551835244
 python review_scraper.py --style c --product 갤워치액티브2_스테인리스_44mm --max_count 13 --url https://search.shopping.naver.com/catalog/20551835240
-
+python review_scraper.py --style p --product 갤워치액티브2_종합 --max_count 23 --url https://smartstore.naver.com/dmacshop/products/4653346435
+python review_scraper.py --style c --product 갤워치액티브2_골프_44mm --max_count 20 --url https://search.shopping.naver.com/catalog/22071513178
 '''
