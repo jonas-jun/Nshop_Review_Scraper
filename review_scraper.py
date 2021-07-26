@@ -78,14 +78,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', type=str)
     parser.add_argument('--max_count', type=int, default=5) # 20 + 200*k reviews
-    parser.add_argument('--tsleep', type=int, default=2)
+    parser.add_argument('--tsleep', type=int, default=1.5)
     parser.add_argument('--path_chrome', type=str, default='/Users/jonas/github/N_shop_scraper/chromedriver')
     parser.add_argument('--product', type=str, default='noname')
     parser.add_argument('--style', type=str) # 'product', 'catalog'
     args = parser.parse_args()
     
     if args.style == 'catalog' or args.style == 'c':
-        assert args.max_count < 20, 'when catalog style, maximum 2,000 reviews can be showed'
+        assert args.max_count < 10, 'when catalog style, maximum 2,000 reviews can be showed'
 
     keys = Keys()
     driver = webdriver.Chrome(args.path_chrome)
@@ -101,9 +101,10 @@ if __name__ == '__main__':
 # for insert mode
 
 '''
-python review_scraper.py --style c --product 갤워치액티브2_알루미늄_40mm --max_count 30 --url https://search.shopping.naver.com/catalog/20551835243
-python review_scraper.py --style c --product 갤워치액티브2_알루미늄_44mm --max_count 15 --url https://search.shopping.naver.com/catalog/20551835244
+python review_scraper.py --style c --product 갤워치액티브2_알루미늄_40mm --max_count 9 --url https://search.shopping.naver.com/catalog/20551835243
+python review_scraper.py --style c --product 갤워치액티브2_알루미늄_44mm --max_count 19 --url https://search.shopping.naver.com/catalog/20551835244
 python review_scraper.py --style c --product 갤워치액티브2_스테인리스_44mm --max_count 13 --url https://search.shopping.naver.com/catalog/20551835240
 python review_scraper.py --style p --product 갤워치액티브2_종합 --max_count 23 --url https://smartstore.naver.com/dmacshop/products/4653346435
-python review_scraper.py --style c --product 갤워치액티브2_골프_44mm --max_count 20 --url https://search.shopping.naver.com/catalog/22071513178
+python review_scraper.py --style c --product 갤워치액티브2_골프_44mm --max_count 19 --url https://search.shopping.naver.com/catalog/22071513178
+
 '''
