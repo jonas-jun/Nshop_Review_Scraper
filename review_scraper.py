@@ -46,25 +46,45 @@ def scraping_catalog(stop, sleep, driver):
     star_ratings = list()
 
     while count < stop:
-        for pagenum in next_btn:
-            #print(pagenum)
-            driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
-            time.sleep(sleep)
-            html = driver.page_source
-            soup = BeautifulSoup(html, 'html.parser')
-            page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
-            page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
-            page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
+        if count == 0:
+            for pagenum in next_btn:
+                #print(pagenum)
+                driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
+                time.sleep(sleep)
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
+                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
+                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
 
-            for i in range(len(page_review)):
-                
-                review = page_review[i].text
-                rate = page_rating[i].text[-1]
-                review = re.sub('\n|\t', ' ', review)
-                review = re.sub(' +', ' ', review)
-                review_list.append(review)
-                star_ratings.append(rate)
-        count += 1
+                for i in range(len(page_review)):
+                    
+                    review = page_review[i].text
+                    rate = page_rating[i].text[-1]
+                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub(' +', ' ', review)
+                    review_list.append(review)
+                    star_ratings.append(rate)
+            count += 1
+        else:
+            for pagenum in next_btn:
+                driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
+                time.sleep(sleep)
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
+                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
+                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
+
+                for i in range(len(page_review)):
+                    
+                    review = page_review[i].text
+                    rate = page_rating[i].text[-1]
+                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub(' +', ' ', review)
+                    review_list.append(review)
+                    star_ratings.append(rate)
+            count += 1
     return review_list, star_ratings
 
 def export(reviews, ratings, product):
@@ -77,7 +97,7 @@ def export(reviews, ratings, product):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', type=str)
-    parser.add_argument('--max_count', type=int, default=5)
+    parser.add_argument('--max_count', type=int, default=5) # 20 + 200*k reviews
     parser.add_argument('--tsleep', type=int, default=2)
     parser.add_argument('--path_chrome', type=str, default='/Users/jonas/github/N_shop_scraper/chromedriver')
     parser.add_argument('--product', type=str, default='noname')
@@ -88,7 +108,6 @@ if __name__ == '__main__':
     driver = webdriver.Chrome(args.path_chrome)
     driver.get(args.url)
     time.sleep(2)
-    print('start scraping, target num: {:,}'.format(args.max_count * 220))
     if args.style == 'product' or args.style == 'p':
         reviews, ratings = scraping_product(args.max_count, args.tsleep, driver)
     else:
@@ -97,3 +116,8 @@ if __name__ == '__main__':
     export(reviews, ratings, args.product)
 
 # for insert mode
+
+'''
+python review_scraper.py --style c --product 갤워치액티브2_알루미늄_44mm --max_count 13 --url https://search.shopping.naver.com/catalog/20551835244
+
+'''
