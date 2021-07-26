@@ -67,7 +67,7 @@ def scraping_catalog(stop, sleep, driver):
                     star_ratings.append(rate)
             count += 1
         else:
-            for pagenum in next_btn:
+            for pagenum in next_btn[1:]:
                 driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
                 time.sleep(sleep)
                 html = driver.page_source
@@ -118,6 +118,8 @@ if __name__ == '__main__':
 # for insert mode
 
 '''
-python review_scraper.py --style c --product 갤워치액티브2_알루미늄_44mm --max_count 13 --url https://search.shopping.naver.com/catalog/20551835244
+python review_scraper.py --style c --product 갤워치액티브2_알루미늄_40mm --max_count 30 --url https://search.shopping.naver.com/catalog/20551835243
+python review_scraper.py --style c --product 갤워치액티브2_알루미늄_44mm --max_count 15 --url https://search.shopping.naver.com/catalog/20551835244
+python review_scraper.py --style c --product 갤워치액티브2_스테인리스_44mm --max_count 13 --url https://search.shopping.naver.com/catalog/20551835240
 
 '''
