@@ -1,6 +1,13 @@
 '''
 2021-07-26
 by Jonas-Jun
+
+2021-07-28
+fix max_count
+20 + 200*max_count
+example:
+max_count==1: scrap 1 to 11 page (220)
+max_count==3: scrap 1 to 31 page (620)
 '''
 
 import argparse
@@ -18,53 +25,102 @@ def scraping_product(stop, sleep, driver):
     star_ratings = list()
 
     while count < stop:
-        for pagenum in next_btn:
-            driver.find_element_by_css_selector('#REVIEW > div > div._2y6yIawL6t > div > div.cv6id6JEkg > div > div > ' + str(pagenum) + '').send_keys(keys.ENTER)
-            time.sleep(sleep)
-            html = driver.page_source
-            soup = BeautifulSoup(html, 'html.parser')
-            page_review = soup.find_all('div', class_ = 'YEtwtZFLDz')
-            page_rating_source = soup.find('div', class_ = 'cv6id6JEkg')
-            page_rating = page_rating_source.find_all('em', class_ = '_15NU42F3kT')
-        
-            for i in range(len(page_review)):
-                
-                review = page_review[i].text
-                rate = page_rating[i].text
-                review = re.sub('\n|\t', ' ', review)
-                review = re.sub(' +', ' ', review)
-                review_list.append(review)
-                star_ratings.append(rate)
-        count += 1
+        if count == 0:
+            for pagenum in next_btn:
+                try:
+                    driver.find_element_by_css_selector('#REVIEW > div > div._2y6yIawL6t > div > div.cv6id6JEkg > div > div > ' + str(pagenum) + '').send_keys(keys.ENTER)
+                except: break
+                time.sleep(sleep)
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+                page_review = soup.find_all('div', class_ = 'YEtwtZFLDz')
+                page_rating_source = soup.find('div', class_ = 'cv6id6JEkg')
+                page_rating = page_rating_source.find_all('em', class_ = '_15NU42F3kT')
+            
+                for i in range(len(page_review)):
+                    
+                    review = page_review[i].text
+                    rate = page_rating[i].text
+                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub(' +', ' ', review)
+                    review_list.append(review)
+                    star_ratings.append(rate)
+            count += 1
+        else:
+            for pagenum in next_btn[1:]:
+                try:
+                    driver.find_element_by_css_selector('#REVIEW > div > div._2y6yIawL6t > div > div.cv6id6JEkg > div > div > ' + str(pagenum) + '').send_keys(keys.ENTER)
+                except: break
+                time.sleep(sleep)
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+                page_review = soup.find_all('div', class_ = 'YEtwtZFLDz')
+                page_rating_source = soup.find('div', class_ = 'cv6id6JEkg')
+                page_rating = page_rating_source.find_all('em', class_ = '_15NU42F3kT')
+            
+                for i in range(len(page_review)):
+                    
+                    review = page_review[i].text
+                    rate = page_rating[i].text
+                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub(' +', ' ', review)
+                    review_list.append(review)
+                    star_ratings.append(rate)
+            count += 1
     return review_list, star_ratings
 
 def scraping_catalog(stop, sleep, driver):
     count = 0
-    next_btn = ['a.pagination_now__gZWGP', 'a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)', 'a:nth-child(9)',
-    'a:nth-child(10)', 'a.pagination_next__3ycRH']
+    next_btn = ['a.pagination_now__gZWGP', 'a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)',
+    'a:nth-child(8)', 'a:nth-child(9)', 'a:nth-child(10)', 'a.pagination_next__3ycRH']
+    next_btn_1 = ['a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)',
+    'a:nth-child(9)', 'a:nth-child(10)', 'a:nth-child(11)', 'a.pagination_next__3ycRH']
     review_list = list()
     star_ratings = list()
 
     while count < stop:
-        for pagenum in next_btn:
-            driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
-            time.sleep(sleep)
-            html = driver.page_source
-            soup = BeautifulSoup(html, 'html.parser')
-            page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
-            page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
-            page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
+        if count == 0:
+            for pagenum in next_btn:
+                try:
+                    driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
+                except: break
+                time.sleep(sleep)
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
+                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
+                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
 
-            for i in range(len(page_review)):
-                
-                review = page_review[i].text
-                rate = page_rating[i].text[-1]
-                review = re.sub('\n|\t', ' ', review)
-                review = re.sub(' +', ' ', review)
-                review_list.append(review)
-                star_ratings.append(rate)
-        count += 1
-        
+                for i in range(len(page_review)):
+                    
+                    review = page_review[i].text
+                    rate = page_rating[i].text[-1]
+                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub(' +', ' ', review)
+                    review_list.append(review)
+                    star_ratings.append(rate)
+            count += 1
+        else:
+            for pagenum in next_btn_1:
+                try:
+                    driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
+                except: break
+                time.sleep(sleep)
+                html = driver.page_source
+                soup = BeautifulSoup(html, 'html.parser')
+                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
+                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
+                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
+
+                for i in range(len(page_review)):
+                    
+                    review = page_review[i].text
+                    rate = page_rating[i].text[-1]
+                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub(' +', ' ', review)
+                    review_list.append(review)
+                    star_ratings.append(rate)
+            count += 1        
     return review_list, star_ratings
 
 def export(reviews, ratings, product):
@@ -101,10 +157,6 @@ if __name__ == '__main__':
 # for insert mode
 
 '''
-python review_scraper.py --style c --product 갤워치액티브2_알루미늄_40mm --max_count 9 --url https://search.shopping.naver.com/catalog/20551835243
-python review_scraper.py --style c --product 갤워치액티브2_알루미늄_44mm --max_count 19 --url https://search.shopping.naver.com/catalog/20551835244
-python review_scraper.py --style c --product 갤워치액티브2_스테인리스_44mm --max_count 13 --url https://search.shopping.naver.com/catalog/20551835240
-python review_scraper.py --style p --product 갤워치액티브2_종합 --max_count 23 --url https://smartstore.naver.com/dmacshop/products/4653346435
-python review_scraper.py --style c --product 갤워치액티브2_골프_44mm --max_count 19 --url https://search.shopping.naver.com/catalog/22071513178
+list
 
 '''
