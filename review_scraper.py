@@ -95,7 +95,7 @@ def scraping_catalog(stop, sleep, driver):
                     
                     review = page_review[i].text
                     rate = page_rating[i].text[-1]
-                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub('\n+|\t+', ' ', review)
                     review = re.sub(' +', ' ', review)
                     review_list.append(review)
                     star_ratings.append(rate)
@@ -116,7 +116,7 @@ def scraping_catalog(stop, sleep, driver):
                     
                     review = page_review[i].text
                     rate = page_rating[i].text[-1]
-                    review = re.sub('\n|\t', ' ', review)
+                    review = re.sub('\n+|\t+', ' ', review)
                     review = re.sub(' +', ' ', review)
                     review_list.append(review)
                     star_ratings.append(rate)
@@ -125,11 +125,13 @@ def scraping_catalog(stop, sleep, driver):
 
 def export(reviews, ratings, product):
     cnt = len(reviews)
-    with open('NshopReview_{}_{}.txt'.format(product, cnt), 'w') as f:
+    file_name = 'NshopReview_{}_{}.txt'.format(product, cnt)
+    with open(file_name, 'w') as f:
         for review, rate in zip(reviews, ratings):
             f.write(review + '\t')
             f.write(rate + '\n')
-
+    print('file created: ', file_name)
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', type=str)
