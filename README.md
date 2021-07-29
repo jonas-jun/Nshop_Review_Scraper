@@ -12,3 +12,8 @@
 - --path_chrome: Chrome driver 파일의 abstract path. folderA에 들어있다면 folderA/chromedriver 까지 넣어줘야 합니다.  
 - --product: txt파일로 뽑아낼 때 파일명에 사용됩니다.  
 - --style: 두 가지 형태의 페이지가 있습니다.  product 페이지와 catalog 페이지. {p, c}
+
+***
+**update**  
+- 210729 max_count가 일관적이지 않아 수정했습니다. 20(1페이지) + 200*max_count 만큼 스크래핑 됩니다. ex. max_count=3이라면 620개 (1~31페이지)  
+- 210730 review를 스크래핑할 때 \n, \t가 여러 개 붙어있는 경우에도 잘 제거할 수 있도록 re.sub를 수정했습니다. 이후 txt 파일에 write할 때 문제가 발생할 수 있기 때문.  
