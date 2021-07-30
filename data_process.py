@@ -23,7 +23,7 @@ def load_reviews(file):
             re_buy.append(0)
         
         reviews.append(review)
-        ratings.append(rating)
+        ratings.append(rating.strip())
     
     return reviews, ratings, re_buy, a_month
 
