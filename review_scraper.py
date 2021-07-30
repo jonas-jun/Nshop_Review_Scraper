@@ -125,12 +125,13 @@ def scraping_catalog(stop, sleep, driver):
 
 def export(reviews, ratings, product):
     cnt = len(reviews)
-    file_name = 'NshopReview_{}_{}.txt'.format(product, cnt)
-    with open(file_name, 'w') as f:
+    raw_name = '[Raw]NshopReview_{}_{}.txt'.format(product, cnt)
+    with open(raw_name, 'w') as f:
         for review, rate in zip(reviews, ratings):
             f.write(review + '\t')
             f.write(rate + '\n')
-    print('file created: ', file_name)
+    print('file created: ', raw_name)
+    return raw_name
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -140,6 +141,7 @@ if __name__ == '__main__':
     parser.add_argument('--path_chrome', type=str, default='/Users/jonas/github/N_shop_scraper/chromedriver')
     parser.add_argument('--product', type=str, default='noname')
     parser.add_argument('--style', type=str) # 'product', 'catalog'
+    parser.add_argument('--process', type=bool, default=True)
     args = parser.parse_args()
     
     if args.style == 'catalog' or args.style == 'c':
@@ -154,7 +156,17 @@ if __name__ == '__main__':
     else:
         reviews, ratings = scraping_catalog(args.max_count, args.tsleep, driver)
     print('scraping finished, # of reviews: {:,}'.format(len(reviews)))    
-    export(reviews, ratings, args.product)
+    raw_name = export(reviews, ratings, args.product)
+
+    if args.process:
+        from data_process import load_reviews, drop_duplicates
+        reviews, ratings, re_buy, a_month = load_reviews(raw_name)
+        reviews, ratings, re_buy, a_month = drop_duplicates(reviews, ratings, re_buy, a_month)
+        process_name = '[Process]NshopReview_{}_{}.txt'.format(args.product, len(reviews))
+        with open(process_name, 'w') as f:
+            for review, rating, rebuy, month in zip(reviews, ratings, re_buy, a_month):
+                f.write(review + '\t' + str(rating) + '\t' + str(rebuy) + '\t' + str(month) + '\n')
+        print('Processed file created: ', process_name)
 
 # for insert mode
 
