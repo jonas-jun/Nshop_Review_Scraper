@@ -164,6 +164,7 @@ if __name__ == '__main__':
         reviews, ratings, re_buy, a_month = drop_duplicates(reviews, ratings, re_buy, a_month)
         process_name = '[Process]NshopReview_{}_{}.txt'.format(args.product, len(reviews))
         with open(process_name, 'w') as f:
+            f.write('review\trating\tre_buy\ta_month\n')
             for review, rating, rebuy, month in zip(reviews, ratings, re_buy, a_month):
                 f.write(review + '\t' + str(rating) + '\t' + str(rebuy) + '\t' + str(month) + '\n')
         print('Processed file created: ', process_name)
