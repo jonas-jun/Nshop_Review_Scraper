@@ -173,6 +173,5 @@ if __name__ == '__main__':
 
 # for insert mode
 '''
-list
-
+python review_scraper.py --product 마샬_Acton2_유로블리 --style p --max_count 9 --url https://smartstore.naver.com/eurovely/products/4624492408
 '''
