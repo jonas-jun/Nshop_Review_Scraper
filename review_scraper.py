@@ -134,6 +134,14 @@ def export(reviews, ratings, product):
     return raw_name
     
 if __name__ == '__main__':
+    welcome = '''
+    ====================
+    Nshop_Review_Scraper has been run
+    code by Junmay
+    https://github.com/jonas-jun/Nshop_Review_Scraper
+    ====================
+    '''
+    print(welcome)
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', type=str)
     parser.add_argument('--max_count', type=int, default=5) # 20 + 200*k reviews
@@ -173,5 +181,5 @@ if __name__ == '__main__':
 
 # for insert mode
 '''
-python review_scraper.py --product 마샬_Acton2_유로블리 --style p --max_count 9 --url https://smartstore.naver.com/eurovely/products/4624492408
+python review_scraper.py --product 마샬_Acton2_유로블리 --style p --max_count 1 --url https://smartstore.naver.com/eurovely/products/4624492408
 '''
