@@ -19,108 +19,66 @@ from selenium.webdriver.common.keys import Keys
 
 def scraping_product(stop, sleep, driver):
     count = 0
-    next_btn = ['a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)', 'a:nth-child(9)',
+    next_btn_temp = ['a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)', 'a:nth-child(9)',
     'a:nth-child(10)', 'a:nth-child(11)', 'a.fAUKm1ewwo._2Ar8-aEUTq']
     review_list = list()
     star_ratings = list()
 
     while count < stop:
-        if count == 0:
-            for pagenum in next_btn:
-                try:
-                    driver.find_element_by_css_selector('#REVIEW > div > div._2y6yIawL6t > div > div.cv6id6JEkg > div > div > ' + str(pagenum) + '').send_keys(keys.ENTER)
-                except: break
-                time.sleep(sleep)
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
-                page_review = soup.find_all('div', class_ = 'YEtwtZFLDz')
-                page_rating_source = soup.find('div', class_ = 'cv6id6JEkg')
-                page_rating = page_rating_source.find_all('em', class_ = '_15NU42F3kT')
-            
-                for i in range(len(page_review)):
-                    
-                    review = page_review[i].text
-                    rate = page_rating[i].text
-                    review = re.sub('\n|\t', ' ', review)
-                    review = re.sub(' +', ' ', review)
-                    review_list.append(review)
-                    star_ratings.append(rate)
-            count += 1
-        else:
-            for pagenum in next_btn[1:]:
-                try:
-                    driver.find_element_by_css_selector('#REVIEW > div > div._2y6yIawL6t > div > div.cv6id6JEkg > div > div > ' + str(pagenum) + '').send_keys(keys.ENTER)
-                except: break
-                time.sleep(sleep)
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
-                page_review = soup.find_all('div', class_ = 'YEtwtZFLDz')
-                page_rating_source = soup.find('div', class_ = 'cv6id6JEkg')
-                page_rating = page_rating_source.find_all('em', class_ = '_15NU42F3kT')
-            
-                for i in range(len(page_review)):
-                    
-                    review = page_review[i].text
-                    rate = page_rating[i].text
-                    review = re.sub('\n|\t', ' ', review)
-                    review = re.sub(' +', ' ', review)
-                    review_list.append(review)
-                    star_ratings.append(rate)
-            count += 1
+        next_btn = next_btn_temp if count == 0 else next_btn_temp[1:]
+        for pagenum in next_btn:
+            try:
+                driver.find_element_by_css_selector('#REVIEW > div > div._2y6yIawL6t > div > div.cv6id6JEkg > div > div > ' + str(pagenum) + '').send_keys(keys.ENTER)
+            except: break
+            time.sleep(sleep)
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            page_review = soup.find_all('div', class_ = 'YEtwtZFLDz')
+            page_rating_source = soup.find('div', class_ = 'cv6id6JEkg')
+            page_rating = page_rating_source.find_all('em', class_ = '_15NU42F3kT')
+        
+            for i in range(len(page_review)):
+                
+                review = page_review[i].text
+                rate = page_rating[i].text
+                review = re.sub('\n|\t', ' ', review)
+                review = re.sub(' +', ' ', review)
+                review_list.append(review)
+                star_ratings.append(rate)
+        count += 1
     return review_list, star_ratings
 
 def scraping_catalog(stop, sleep, driver):
     count = 0
-    next_btn = ['a.pagination_now__gZWGP', 'a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)',
+    next_btn_1 = ['a.pagination_now__gZWGP', 'a:nth-child(2)', 'a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)',
     'a:nth-child(8)', 'a:nth-child(9)', 'a:nth-child(10)', 'a.pagination_next__3ycRH']
-    next_btn_1 = ['a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)',
+    next_btn_2 = ['a:nth-child(3)', 'a:nth-child(4)', 'a:nth-child(5)', 'a:nth-child(6)', 'a:nth-child(7)', 'a:nth-child(8)',
     'a:nth-child(9)', 'a:nth-child(10)', 'a:nth-child(11)', 'a.pagination_next__3ycRH']
     review_list = list()
     star_ratings = list()
 
     while count < stop:
-        if count == 0:
-            for pagenum in next_btn:
-                try:
-                    driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
-                except: break
-                time.sleep(sleep)
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
-                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
-                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
-                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
+        next_btn = next_btn_1 if count == 0 else next_btn_2
+        for pagenum in next_btn:
+            try:
+                driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
+            except: break
+            time.sleep(sleep)
+            html = driver.page_source
+            soup = BeautifulSoup(html, 'html.parser')
+            page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
+            page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
+            page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
 
-                for i in range(len(page_review)):
-                    
-                    review = page_review[i].text
-                    rate = page_rating[i].text[-1]
-                    review = re.sub('\n+|\t+', ' ', review)
-                    review = re.sub(' +', ' ', review)
-                    review_list.append(review)
-                    star_ratings.append(rate)
-            count += 1
-        else:
-            for pagenum in next_btn_1:
-                try:
-                    driver.find_element_by_css_selector('#section_review > div.pagination_pagination__2M9a4 >' + str(pagenum) + '').send_keys(keys.ENTER)
-                except: break
-                time.sleep(sleep)
-                html = driver.page_source
-                soup = BeautifulSoup(html, 'html.parser')
-                page_source = soup.find('ul', class_ = 'reviewItems_list_review__1sgcJ')
-                page_review = page_source.find_all('p', class_ = 'reviewItems_text__XIsTc')
-                page_rating = page_source.find_all('span', class_ = 'reviewItems_average__16Ya-')
-
-                for i in range(len(page_review)):
-                    
-                    review = page_review[i].text
-                    rate = page_rating[i].text[-1]
-                    review = re.sub('\n+|\t+', ' ', review)
-                    review = re.sub(' +', ' ', review)
-                    review_list.append(review)
-                    star_ratings.append(rate)
-            count += 1        
+            for i in range(len(page_review)):
+                
+                review = page_review[i].text
+                rate = page_rating[i].text[-1]
+                review = re.sub('\n+|\t+', ' ', review)
+                review = re.sub(' +', ' ', review)
+                review_list.append(review)
+                star_ratings.append(rate)
+        count += 1
     return review_list, star_ratings
 
 def export(reviews, ratings, product):
