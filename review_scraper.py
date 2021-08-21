@@ -43,7 +43,7 @@ def scraping_product(stop, sleep, driver):
                 rate = page_rating[i].text
                 review = re.sub('\n|\t', ' ', review)
                 review = re.sub(' +', ' ', review)
-                if not re.search('[가-힣', review): continue # 한글이 하나도 없을 경우 추가하지 않음
+                if not re.search('[가-힣]', review): continue # 한글이 하나도 없을 경우 추가하지 않음
                 if len(review.split())==1: continue # 띄어쓰기가 하나도 안 되어 있을 경우 추가하지 않음
                 review_list.append(review)
                 star_ratings.append(rate)
@@ -78,7 +78,7 @@ def scraping_catalog(stop, sleep, driver):
                 rate = page_rating[i].text[-1]
                 review = re.sub('\n+|\t+', ' ', review)
                 review = re.sub(' +', ' ', review)
-                if not re.search('[가-힣', review): continue # 한글이 하나도 없을 경우 추가하지 않음
+                if not re.search('[가-힣]', review): continue # 한글이 하나도 없을 경우 추가하지 않음
                 if len(review.split())==1: continue # 띄어쓰기가 하나도 안 되어 있을 경우 추가하지 않음
                 review_list.append(review)
                 star_ratings.append(rate)
