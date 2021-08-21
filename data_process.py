@@ -22,6 +22,11 @@ def load_reviews(file):
         else:
             re_buy.append(0)
         
+        # BEST
+        if review.startswith('BEST'):
+            review = review[4:]
+
+        
         reviews.append(review)
         ratings.append(rating.strip())
     
