@@ -143,5 +143,6 @@ if __name__ == '__main__':
 
 # for insert mode
 '''
-python review_scraper.py --product 마샬_Acton2_유로블리 --style p --max_count 1 --url https://smartstore.naver.com/eurovely/products/4624492408
+python review_scraper.py --product 부르조아_벨벳펜슬_3_beautyshop --style p --max_count 15 --url https://smartstore.naver.com/beautyshop/products/4713083841
+python review_scraper.py --product 하만카돈_AuraStudio3_카탈로그 --style c --max_count 8 --url https://search.shopping.naver.com/catalog/24067251522
 '''
